@@ -1,12 +1,10 @@
-const express = require('express');
-
+const express = require("express");
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Ride route working'
-  });
-});
+const { createRide, respondToRide, completeRide } = require("../controllers/rideController");
+
+router.post("/create", createRide);
+router.post("/respond", respondToRide);
+router.post("/complete", completeRide);
 
 module.exports = router;

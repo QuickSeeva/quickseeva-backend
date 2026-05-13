@@ -1,17 +1,22 @@
-const express = require('express');
-const cors = require('cors');
-
-const rideRoutes = require('./routes/rideRoutes');
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('QuickSeeva Backend Running');
-});
+const driverRoutes = require("./routes/driverRoutes");
 
-app.use('/api/rides', rideRoutes);
+app.use("/api/drivers", driverRoutes);
+
+// IMPORTANT ROUTE IMPORT
+const rideRoutes = require("./routes/rideRoutes");
+
+app.use("/api/rides", rideRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Backend Running");
+});
 
 module.exports = app;

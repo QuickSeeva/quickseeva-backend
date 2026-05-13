@@ -1,9 +1,39 @@
-require('dotenv').config();
+const http = require("http");
 
-const app = require('./src/app');
+const app = require("./src/app");
 
-const PORT = process.env.PORT || 5000;
+const server = http.createServer(app);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const { Server } = require("socket.io");
+
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+});
+
+// SOCKET CONNECTION
+io.on("connection", (socket) => {
+
+  console.log("User Connected:", socket.id);
+
+  // DRIVER LOCATION UPDATE
+  socket.on("driver-location", async (data) => {
+
+    console.log("Driver Location:", data);
+
+    // later:
+    // update firestore
+    // emit to user
+
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected");
+  });
+
+});
+
+server.listen(5000, () => {
+  console.log("Server running on port 5000");
 });
