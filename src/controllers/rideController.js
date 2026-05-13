@@ -43,7 +43,12 @@ const createRide = async (req, res) => {
       createdAt: new Date()
     });
 
-   
+  
+    await db.collection("drivers")
+      .doc(driverId)
+      .update({
+        isAvailable: false
+      });
 
     res.json({
       success: true,
@@ -90,19 +95,27 @@ const respondToRide = async (req, res) => {
     }
 
     // REJECT
-    if (action === "REJECT") {
+   if (action === "REJECT") {
 
-      await db.collection("rides")
-        .doc(rideId)
-        .update({
-          status: "REJECTED"
-        });
+  // UPDATE RIDE
+  await db.collection("rides")
+    .doc(rideId)
+    .update({
+      status: "REJECTED"
+    });
 
-      return res.json({
-        success: true,
-        message: "Ride rejected"
-      });
-    }
+  // MAKE DRIVER AVAILABLE AGAIN
+  await db.collection("drivers")
+    .doc(driverId)
+    .update({
+      isAvailable: true
+    });
+
+  return res.json({
+    success: true,
+    message: "Ride rejected"
+  });
+}
     return res.status(400).json({
   success: false,
   message: "Invalid action"
